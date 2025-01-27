@@ -1,11 +1,11 @@
 import { serve } from '@hono/node-server'
 import app from './app.js'
 
+const port = 8000
 
-const port = 3000
- console.log(`Server is running on http://localhost:${port}`)
-
-serve({
+const honoServer = {
   fetch: app.fetch,
   port,
-})
+}
+
+serve(honoServer)

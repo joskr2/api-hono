@@ -1,9 +1,7 @@
-import { OpenAPIHono } from "@hono/zod-openapi";
+import { OpenAPIHono } from '@hono/zod-openapi'
 
-const app = new OpenAPIHono();
+const app = new OpenAPIHono()
 
-app.get("/", (c) => {
-  return c.text("Hello Hono!");
-});
+app.get('/', ({ text }) => text('Hello Hono!'))
 
-export default app;
+export default app
