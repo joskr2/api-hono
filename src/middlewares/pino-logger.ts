@@ -1,8 +1,9 @@
+import env from "@/envSchema.js";
 import { pinoLogger } from "hono-pino";
 import pretty from "pino-pretty"
 
 const logger = pinoLogger({
-    pino: pretty({
+    pino: env.NODE_ENV === 'production' ? undefined : pretty({
         colorize: true,
         translateTime: 'yyyy-mm-dd HH:MM:ss',
         levelFirst: true,
