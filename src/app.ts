@@ -1,21 +1,13 @@
 import configureOpenApi from './lib/configure-open-api.js';
 import createApp from './lib/create-app.js';
 import index from './routes/index.route.js';
+import  tasks from './routes/tasks/task.index.js'
 
 const app = createApp();
 
-// app.get('/', (c) => {
-//     return c.text('Hello Hono!')
-// })
-
-// app.get('/error', (c) => {
-//     c.status(422)
-//     c.var.logger.debug("debug")
-//     throw new Error("Error")
-// })
-
 const routes = [
-    index
+    index,
+    tasks
 ]
 
 configureOpenApi(app);
