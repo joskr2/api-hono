@@ -1,13 +1,27 @@
-import { OpenAPIHono } from '@hono/zod-openapi'
-import { notFound, onError } from 'stoker/middlewares'
-import pinoLogger from './middlewares/pino-logger.js'
+import configureOpenApi from './lib/configure-open-api.js';
+import createApp from './lib/create-app.js';
+import index from './routes/index.route.js';
 
-const app = new OpenAPIHono()
+const app = createApp();
 
-app.use('*', pinoLogger)
+// app.get('/', (c) => {
+//     return c.text('Hello Hono!')
+// })
 
-app.get('/', ({ text }) => text('Hello Hono!'))
-app.notFound(notFound)
-app.onError(onError)
+// app.get('/error', (c) => {
+//     c.status(422)
+//     c.var.logger.debug("debug")
+//     throw new Error("Error")
+// })
+
+const routes = [
+    index
+]
+
+configureOpenApi(app);
+
+routes.forEach((route) => {
+    app.route('/', route)
+})
 
 export default app

@@ -4,6 +4,8 @@
     "jsx": "react-jsx",
     "jsxImportSource": "hono/jsx",
     "module": "NodeNext",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
     "paths": {
       "@/*": [
         "./src/*"

@@ -1,5 +1,9 @@
 {
   "name": "tareas-api",
+  "version": "1.0.0",
+  "description": "API para tareas",
+  "main": "index.js",
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
