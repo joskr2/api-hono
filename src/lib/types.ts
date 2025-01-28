@@ -1,4 +1,4 @@
-import type { OpenAPIHono } from "@hono/zod-openapi"
+import type { OpenAPIHono, RouteConfig, RouteHandler } from "@hono/zod-openapi"
 import type { PinoLogger } from "hono-pino"
 
 export interface AppBindings {
@@ -6,5 +6,8 @@ export interface AppBindings {
         logger: PinoLogger
     }
 }
+
+export type AppRouteHandler<R extends RouteConfig> = RouteHandler<R,AppBindings>;
+
 
 export type AppOpenApi = OpenAPIHono<AppBindings>
