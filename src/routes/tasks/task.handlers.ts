@@ -18,7 +18,7 @@ export const list: AppRouteHandler<ListRoute> = async (c) => {
                 id,
                 title,
                 description,
-                done: Boolean(done),
+                done,
                 createdAt: formatDate(createdAt),
                 updatedAt: formatDate(updatedAt)
             };
