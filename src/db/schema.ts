@@ -1,20 +1,20 @@
-import { sql } from "drizzle-orm";
-import { sqliteTable } from "drizzle-orm/sqlite-core";
-import { integer, text } from "drizzle-orm/sqlite-core";
-import { createSelectSchema } from "drizzle-zod";
+import { sql } from 'drizzle-orm'
+import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core'
+import { createInsertSchema, createSelectSchema } from 'drizzle-zod'
 
 export const tasks = sqliteTable(
-    "tasks",
-    {
-        id: integer("id").primaryKey({ autoIncrement: true }),
-        title: text("title").notNull(),
-        description: text("description"),
-        done: integer("done").default(0),
-        createdAt: integer("created_at", { mode: "timestamp" }).default(sql`CURRENT_TIMESTAMP`),
-        updatedAt: integer("updated_at", { mode: "timestamp" })
-            .default(sql`CURRENT_TIMESTAMP`)
-            .$onUpdate(()=>sql`CURRENT_TIMESTAMP`),
-    }
-);
+  'tasks',
+  {
+    createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`CURRENT_TIMESTAMP`),
+    description: text('description'),
+    done: integer('done').default(0),
+    id: integer('id').primaryKey({ autoIncrement: true }),
+    title: text('title').notNull(),
+    updatedAt: integer('updated_at', { mode: 'timestamp' })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .$onUpdate(() => sql`CURRENT_TIMESTAMP`),
+  },
+)
 
-export const taskSchema = createSelectSchema(tasks);
+export const taskSchema = createSelectSchema(tasks)
+export const insertTaskSchema = createInsertSchema(tasks)

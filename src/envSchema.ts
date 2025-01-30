@@ -4,14 +4,14 @@ import { z } from 'zod'
 
 expand(config())
 
-let myEnv:env;
+let myEnv: env
 
 const EnvSchema = z.object({
+  DATABASE_AUTH_TOKEN: z.string().optional(),
+  DATABASE_URL: z.string().url(),
+  LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error']).default('info'),
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
   PORT: z.coerce.number().default(8080),
-  LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error']).default('info'),
-  DATABASE_URL:z.string().url(),
-  DATABASE_AUTH_TOKEN: z.string().optional()
 }).superRefine((val, ctx) => {
   if (val.NODE_ENV === 'production' && !val.DATABASE_AUTH_TOKEN) {
     ctx.addIssue({
