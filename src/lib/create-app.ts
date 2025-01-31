@@ -4,12 +4,12 @@ import { notFound, onError, serveEmojiFavicon } from 'stoker/middlewares'
 import { defaultHook } from 'stoker/openapi'
 import pinoLogger from '../middlewares/pino-logger.js'
 
-export function createRouter() {
+export function createRouter(): OpenAPIHono<AppBindings> {
   const app = new OpenAPIHono<AppBindings>({ defaultHook, strict: false })
   return app
 }
 
-function createApp() {
+function createApp(): OpenAPIHono<AppBindings> {
   const app = createRouter()
   app.use(serveEmojiFavicon('🦊'))
   app.use('*', pinoLogger)

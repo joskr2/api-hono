@@ -22,7 +22,6 @@ export const list = createRoute({
 })
 
 export const create = createRoute({
-  tags: ['Tasks'],
   method: 'post',
   path: '/tasks',
   request: {
@@ -40,8 +39,9 @@ export const create = createRoute({
       'Tarea creada',
     ),
   },
+  tags: ['Tasks'],
 
 })
 
-export type ListRoute = typeof list;
-export type CreateRoute = typeof create;
+export type ListRoute = typeof list
+export type CreateRoute = typeof create

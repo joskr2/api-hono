@@ -2,7 +2,7 @@ import type { AppOpenApi } from './types.js'
 import { apiReference } from '@scalar/hono-api-reference'
 import packageJson from '../../package.json'
 
-function configureOpenApi(app: AppOpenApi) {
+function configureOpenApi(app: AppOpenApi): void {
   app.doc('/doc', {
     info: {
       title: packageJson.name,
