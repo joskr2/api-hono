@@ -6,5 +6,6 @@ import * as routes from './task.routes.js'
 
 const router = createRouter()
   .openapi(routes.list, handlers.list)
+  .openapi(routes.create, handlers.create)
 
 export default router
