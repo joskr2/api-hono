@@ -5,8 +5,7 @@ import { defaultHook } from 'stoker/openapi'
 import pinoLogger from '../middlewares/pino-logger.js'
 
 export function createRouter(): OpenAPIHono<AppBindings> {
-  const app = new OpenAPIHono<AppBindings>({ defaultHook, strict: false })
-  return app
+  return new OpenAPIHono<AppBindings>({ strict: false, defaultHook })
 }
 
 function createApp(): OpenAPIHono<AppBindings> {

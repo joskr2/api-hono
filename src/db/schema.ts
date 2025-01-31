@@ -21,7 +21,10 @@ export const taskSchema = createSelectSchema(tasks).transform((task) => ({
     done: Boolean(task.done)
 }))
 
-export const insertTaskSchema = createInsertSchema(tasks)
+export const insertTaskSchema = createInsertSchema(tasks,{
+    done: (schema) => schema.transform((val) => Boolean(val)),
+    title: (schema) => schema.min(1),
+})
     .omit({
         createdAt: true,
         id: true,
