@@ -5,14 +5,14 @@ import { createInsertSchema, createSelectSchema } from 'drizzle-zod'
 export const tasks = sqliteTable(
     'tasks',
     {
-        createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`CURRENT_TIMESTAMP`),
+        createdAt: text('created_at').default(sql`(datetime('now'))`),
         description: text('description'),
         done: integer('done').notNull().default(0),
         id: integer('id').primaryKey({ autoIncrement: true }),
         title: text('title').notNull(),
-        updatedAt: integer('updated_at', { mode: 'timestamp' })
-            .default(sql`CURRENT_TIMESTAMP`)
-            .$onUpdate(() => sql`CURRENT_TIMESTAMP`),
+        updatedAt: text('updated_at')
+            .default(sql`(datetime('now'))`)
+            .$onUpdate(() => sql`(datetime('now'))`),
     },
 )
 
@@ -30,7 +30,5 @@ export const insertTaskSchema = createInsertSchema(tasks,{
         id: true,
         updatedAt: true,
     })
-    .transform((data) => ({
-        ...data,
-        done: data.done ? 1 : 0
-    }))
+
+ export const updateTaskSchema = insertTaskSchema.partial()   

@@ -1,8 +1,8 @@
-import { insertTaskSchema, taskSchema } from '@/db/schema.js'
+import { insertTaskSchema, taskSchema, updateTaskSchema } from '@/db/schema.js'
 import { notFoundSchema } from '@/lib/constants.js'
 import { createRoute, z } from '@hono/zod-openapi'
 import { INTERNAL_SERVER_ERROR, OK, UNPROCESSABLE_ENTITY, NOT_FOUND } from 'stoker/http-status-codes'
-import { jsonContent, jsonContentRequired } from 'stoker/openapi/helpers'
+import { jsonContent, jsonContentOneOf, jsonContentRequired } from 'stoker/openapi/helpers'
 import { createErrorSchema, IdParamsSchema } from 'stoker/openapi/schemas'
 
 export const list = createRoute({
@@ -72,6 +72,38 @@ export const getOne = createRoute({
   tags: ['Tasks'],
 })
 
+export const update = createRoute({
+  method: 'put',
+  path: '/tasks/{id}',
+  request: {
+    params: IdParamsSchema,
+    body: jsonContentRequired(updateTaskSchema, 'Tarea a actualizar'),
+  },
+  responses: {
+    [INTERNAL_SERVER_ERROR]: jsonContent(
+      z.object({
+        message: z.string(),
+      }),
+      'Error interno del servidor',
+    ),
+    [NOT_FOUND]: jsonContent(
+      notFoundSchema,
+      'Tarea no encontrada',
+    ),
+    [UNPROCESSABLE_ENTITY]: jsonContent(
+      createErrorSchema(updateTaskSchema),
+      'Error de validación',
+    ),
+    [OK]: jsonContent(
+      taskSchema,
+      'Tarea actualizada',
+    ),
+  },
+  tags: ['Tasks'],
+})
+
+
 export type ListRoute = typeof list
 export type CreateRoute = typeof create
 export type GetOneRoute = typeof getOne
+export type UpdateRoute = typeof update
