@@ -104,13 +104,13 @@ export const update: AppRouteHandler<UpdateRoute> = async (c) => {
         console.log('✨ Found existing task:', exists)
 
         const [updated] = await db.update(tasks)
-        .set({
-            title: updates.title ?? exists.title,
-            description: updates.description ?? exists.description,
-            done: updates.done === undefined ? exists.done : (updates.done ? 1 : 0)
-        })
-        .where(eq(tasks.id, id))
-        .returning()
+            .set({
+                title: updates.title ?? exists.title,
+                description: updates.description ?? exists.description,
+                done: updates.done === undefined ? exists.done : (updates.done ? 1 : 0)
+            })
+            .where(eq(tasks.id, id))
+            .returning()
 
         if (!updated) {
             console.error('❌ Failed to update task')
@@ -118,17 +118,6 @@ export const update: AppRouteHandler<UpdateRoute> = async (c) => {
         }
 
         console.log('✅ Successfully updated task:', updated)
-
-        // const formatTimestamp = (timestamp: unknown): string => {
-        //     const now = new Date().toISOString()
-        //     if (!timestamp) return now
-        //     try {
-        //         const date = new Date(Number(timestamp))
-        //         return date.toISOString()
-        //     } catch {
-        //         return now
-        //     }
-        // }
 
         return c.json({
             ...updated,
