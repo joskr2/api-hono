@@ -1,8 +1,9 @@
 import { insertTaskSchema, taskSchema } from '@/db/schema.js'
+import { notFoundSchema } from '@/lib/constants.js'
 import { createRoute, z } from '@hono/zod-openapi'
-import { INTERNAL_SERVER_ERROR, OK, UNPROCESSABLE_ENTITY } from 'stoker/http-status-codes'
+import { INTERNAL_SERVER_ERROR, OK, UNPROCESSABLE_ENTITY, NOT_FOUND } from 'stoker/http-status-codes'
 import { jsonContent, jsonContentRequired } from 'stoker/openapi/helpers'
-import { createErrorSchema } from 'stoker/openapi/schemas'
+import { createErrorSchema, IdParamsSchema } from 'stoker/openapi/schemas'
 
 export const list = createRoute({
   method: 'get',
@@ -46,5 +47,31 @@ export const create = createRoute({
 
 })
 
+export const getOne = createRoute({
+  method: 'get',
+  path: '/tasks/{id}',
+  request: {
+    params: IdParamsSchema
+  },
+  responses: {
+    [INTERNAL_SERVER_ERROR]: jsonContent(
+      z.object({
+        message: z.string(),
+      }),
+      'Error interno del servidor',
+    ),
+    [NOT_FOUND]: jsonContent(
+      notFoundSchema,
+      'Tarea no encontrada',
+    ),
+    [OK]: jsonContent(
+      taskSchema,
+      'Tarea encontrada',
+    ),
+  },
+  tags: ['Tasks'],
+})
+
 export type ListRoute = typeof list
 export type CreateRoute = typeof create
+export type GetOneRoute = typeof getOne
