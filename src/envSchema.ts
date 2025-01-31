@@ -4,8 +4,6 @@ import { z } from 'zod'
 
 expand(config())
 
-let myEnv: env
-
 const EnvSchema = z.object({
   DATABASE_AUTH_TOKEN: z.string().optional(),
   DATABASE_URL: z.string().url(),
@@ -23,6 +21,6 @@ const EnvSchema = z.object({
 
 export type env = z.infer<typeof EnvSchema>
 
-myEnv = EnvSchema.parse(process.env)
+const myEnv = EnvSchema.parse(process.env)
 
 export default myEnv
