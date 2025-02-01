@@ -1,4 +1,4 @@
-import { insertTaskSchema, taskSchema, updateTaskSchema } from '@/db/schema.js'
+import { insertTaskSchema, patchTaskSchema, taskSchema, updateTaskSchema } from '@/db/schema.js'
 import { notFoundSchema } from '@/lib/constants.js'
 import { createRoute, z } from '@hono/zod-openapi'
 import { INTERNAL_SERVER_ERROR, OK, UNPROCESSABLE_ENTITY, NOT_FOUND } from 'stoker/http-status-codes'
@@ -37,7 +37,12 @@ export const create = createRoute({
       'Error interno del servidor',
     ),
     [UNPROCESSABLE_ENTITY]: jsonContent(
-      createErrorSchema(insertTaskSchema), 'Error de validación'),
+      z.object({
+        error: createErrorSchema(insertTaskSchema),
+        success: z.boolean(),
+      }),
+      'Error de validación'
+    ),
     [OK]: jsonContent(
       taskSchema,
       'Tarea creada',
@@ -91,8 +96,11 @@ export const update = createRoute({
       'Tarea no encontrada',
     ),
     [UNPROCESSABLE_ENTITY]: jsonContent(
-      createErrorSchema(updateTaskSchema),
-      'Error de validación',
+      z.object({
+        error: createErrorSchema(updateTaskSchema),
+        success: z.boolean(),
+      }),
+      'Error de validación'
     ),
     [OK]: jsonContent(
       taskSchema,
@@ -102,8 +110,47 @@ export const update = createRoute({
   tags: ['Tasks'],
 })
 
+export const patch = createRoute({
+  method: 'patch',
+  path: '/tasks/{id}',
+  request: {
+    params: IdParamsSchema,
+    body: jsonContentRequired(patchTaskSchema, 'Tarea a actualizar'),
+  },
+  responses: {
+    [INTERNAL_SERVER_ERROR]: jsonContent(
+      z.object({
+        message: z.string(),
+      }),
+      'Error interno del servidor',
+    ),
+    [NOT_FOUND]: jsonContent(
+      notFoundSchema,
+      'Tarea no encontrada',
+    ),
+    [UNPROCESSABLE_ENTITY]: jsonContentOneOf(
+      [
+        z.object({
+          error: createErrorSchema(patchTaskSchema),
+          success: z.boolean(),
+        }),
+        z.object({
+          error: createErrorSchema(IdParamsSchema),
+          success: z.boolean(),
+        }),
+      ],
+      'Error de validación'
+    ),
+    [OK]: jsonContent(
+      taskSchema,
+      'Tarea actualizada',
+    ),
+  },
+  tags: ['Tasks'],
+})
 
 export type ListRoute = typeof list
 export type CreateRoute = typeof create
 export type GetOneRoute = typeof getOne
 export type UpdateRoute = typeof update
+export type PatchRoute = typeof patch
