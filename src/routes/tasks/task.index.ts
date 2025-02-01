@@ -9,5 +9,6 @@ const router = createRouter()
   .openapi(routes.getOne, handlers.getOne)
   .openapi(routes.update, handlers.update)
   .openapi(routes.patch, handlers.patch)
+  .openapi(routes.remove, handlers.remove)
 
 export default router

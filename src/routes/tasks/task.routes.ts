@@ -1,7 +1,7 @@
 import { insertTaskSchema, patchTaskSchema, taskSchema, updateTaskSchema } from '@/db/schema.js'
 import { notFoundSchema } from '@/lib/constants.js'
 import { createRoute, z } from '@hono/zod-openapi'
-import { INTERNAL_SERVER_ERROR, OK, UNPROCESSABLE_ENTITY, NOT_FOUND } from 'stoker/http-status-codes'
+import { INTERNAL_SERVER_ERROR, NO_CONTENT, NOT_FOUND, OK, UNPROCESSABLE_ENTITY } from 'stoker/http-status-codes'
 import { jsonContent, jsonContentOneOf, jsonContentRequired } from 'stoker/openapi/helpers'
 import { createErrorSchema, IdParamsSchema } from 'stoker/openapi/schemas'
 
@@ -36,16 +36,16 @@ export const create = createRoute({
       }),
       'Error interno del servidor',
     ),
+    [OK]: jsonContent(
+      taskSchema,
+      'Tarea creada',
+    ),
     [UNPROCESSABLE_ENTITY]: jsonContent(
       z.object({
         error: createErrorSchema(insertTaskSchema),
         success: z.boolean(),
       }),
-      'Error de validación'
-    ),
-    [OK]: jsonContent(
-      taskSchema,
-      'Tarea creada',
+      'Error de validación',
     ),
   },
   tags: ['Tasks'],
@@ -56,7 +56,7 @@ export const getOne = createRoute({
   method: 'get',
   path: '/tasks/{id}',
   request: {
-    params: IdParamsSchema
+    params: IdParamsSchema,
   },
   responses: {
     [INTERNAL_SERVER_ERROR]: jsonContent(
@@ -81,8 +81,8 @@ export const update = createRoute({
   method: 'put',
   path: '/tasks/{id}',
   request: {
-    params: IdParamsSchema,
     body: jsonContentRequired(updateTaskSchema, 'Tarea a actualizar'),
+    params: IdParamsSchema,
   },
   responses: {
     [INTERNAL_SERVER_ERROR]: jsonContent(
@@ -95,16 +95,16 @@ export const update = createRoute({
       notFoundSchema,
       'Tarea no encontrada',
     ),
+    [OK]: jsonContent(
+      taskSchema,
+      'Tarea actualizada',
+    ),
     [UNPROCESSABLE_ENTITY]: jsonContent(
       z.object({
         error: createErrorSchema(updateTaskSchema),
         success: z.boolean(),
       }),
-      'Error de validación'
-    ),
-    [OK]: jsonContent(
-      taskSchema,
-      'Tarea actualizada',
+      'Error de validación',
     ),
   },
   tags: ['Tasks'],
@@ -114,8 +114,8 @@ export const patch = createRoute({
   method: 'patch',
   path: '/tasks/{id}',
   request: {
-    params: IdParamsSchema,
     body: jsonContentRequired(patchTaskSchema, 'Tarea a actualizar'),
+    params: IdParamsSchema,
   },
   responses: {
     [INTERNAL_SERVER_ERROR]: jsonContent(
@@ -127,6 +127,10 @@ export const patch = createRoute({
     [NOT_FOUND]: jsonContent(
       notFoundSchema,
       'Tarea no encontrada',
+    ),
+    [OK]: jsonContent(
+      taskSchema,
+      'Tarea actualizada',
     ),
     [UNPROCESSABLE_ENTITY]: jsonContentOneOf(
       [
@@ -139,11 +143,31 @@ export const patch = createRoute({
           success: z.boolean(),
         }),
       ],
-      'Error de validación'
+      'Error de validación',
     ),
-    [OK]: jsonContent(
-      taskSchema,
-      'Tarea actualizada',
+  },
+  tags: ['Tasks'],
+})
+
+export const remove = createRoute({
+  method: 'delete',
+  path: '/tasks/{id}',
+  request: {
+    params: IdParamsSchema,
+  },
+  responses: {
+    [INTERNAL_SERVER_ERROR]: jsonContent(
+      z.object({
+        message: z.string(),
+      }),
+      'Error interno del servidor',
+    ),
+    [NO_CONTENT]: {
+      description: 'Tarea eliminada',
+    },
+    [NOT_FOUND]: jsonContent(
+      notFoundSchema,
+      'Tarea no encontrada',
     ),
   },
   tags: ['Tasks'],
@@ -154,3 +178,4 @@ export type CreateRoute = typeof create
 export type GetOneRoute = typeof getOne
 export type UpdateRoute = typeof update
 export type PatchRoute = typeof patch
+export type RemoveRoute = typeof remove
