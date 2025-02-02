@@ -1,4 +1,4 @@
-import type { AppBindings } from './types.js'
+import type { AppBindings, AppOpenApi } from './types.js'
 import { OpenAPIHono } from '@hono/zod-openapi'
 import { notFound, onError, serveEmojiFavicon } from 'stoker/middlewares'
 import { defaultHook } from 'stoker/openapi'
@@ -15,6 +15,12 @@ function createApp(): OpenAPIHono<AppBindings> {
   app.notFound(notFound)
   app.onError(onError)
   return app
+}
+
+export function createTestApp(router:AppOpenApi){
+  const testApp = createApp()
+  testApp.route('/', router)
+  return testApp
 }
 
 export default createApp
