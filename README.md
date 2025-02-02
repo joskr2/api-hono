@@ -142,14 +142,3 @@ curl -X POST http://localhost:3000/tasks \
 ---
 
 Desarrollado por Josue - [https://github.com/joskr2/api-hono]
-
-
-
-Este README incluye:
-- Adaptación completa al español
-- Estructura organizada del proyecto
-- Instrucciones claras de instalación y uso
-- Documentación técnica relevante
-- Ejemplos prácticos de uso
-- Compatibilidad con el stack tecnológico actual
-- Referencias a la estructura de archivos proporcionada
